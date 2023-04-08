@@ -1,29 +1,23 @@
+#include "HardwareSerial.h"
 #include "Arduino.h"
 #include "lora.h"
-
 
 SoftwareSerial lora_serial(LORA_TX_PIN, LORA_RX_PIN);
 
 void Config(uint16_t address, uint8_t channel){
   digitalWrite(LORA_M0_PIN, 1);
   digitalWrite(LORA_M1_PIN, 1);
-
-  
 }
 
 //============HIGH LEVEL FUNCTION============//
 void LORA_Init(void){
-  self_addressL = (uint8_t)SELF_ADDRESS;
-  self_addressH = (uint8_t)SELF_ADDRESS >> 8;
-  
-  des_addressL = (uint8_t)DES_ADDRESS;
-  des_addressH = (uint8_t)DES_ADDRESS >> 8;
-
+  pinMode(LORA_M0_PIN, OUTPUT);
+  pinMode(LORA_M1_PIN, OUTPUT);
   lora_serial.begin(9600);
   LORA_SetMode(MODE_NORMAL);
 }
 
-void SetMode(unsigned char mode){
+void LORA_SetMode(unsigned char mode){
   switch(mode){
     case MODE_NORMAL:
       digitalWrite(LORA_M0_PIN, 0);
@@ -45,11 +39,22 @@ void SetMode(unsigned char mode){
 }
 
 void LORA_SendMsg(char* msg){
-  lora_serial.write(DES_ADDRESS_H);
-  lora_serial.write(DES_ADDRESS_L);
-  lora_serial.write(DES_CHANNEL);
+  lora_serial.write((char)DES_ADDRESS_H);
+  lora_serial.write((char)DES_ADDRESS_L);
+  lora_serial.write((char)DES_CHANNEL);
 
-  while(*msg){
-    lora_serial.write(*msg++);
+  Serial.println(msg);
+
+  lora_serial.print(msg);
+  // while(*msg){
+  //   lora_serial.write(*msg++);
+  // }
+}
+
+String LORA_Listen(void){
+  if(lora_serial.available() > 0){
+    Serial.println("a");
+     Serial.println(lora_serial.readString());
   }
+  return "";
 }
