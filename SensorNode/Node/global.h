@@ -1,7 +1,10 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
+
 #define NODE_ID         1
+// NODE 0: ID = 0
+// NODE 1: ID = 1
 
 typedef struct Data_Pack{
   unsigned char node_id;

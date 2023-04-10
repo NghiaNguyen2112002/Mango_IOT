@@ -14,19 +14,27 @@ uint16_t PIN_BUTTON[] = {BT0_Pin};
 uint8_t Flag_for_button_press[NO_OF_BUTTONS];
 uint16_t Counter_button_press[NO_OF_BUTTONS];
 
-void IN_Init(void){
+//ADC_HandleTypeDef* adc;
 
+//void IN_Init(ADC_HandleTypeDef* hadc){
+//	adc = hadc;
+//}
+
+uint8_t IN_ReadADC(void){
+//	return HAL_ADC_GetValue(adc) / 4095 * 100;
 }
 
 //this function is called every 50ms
 void IN_ReadButton(void){
 	for(uint8_t i = 0; i < NO_OF_BUTTONS; i++){
 		if(HAL_GPIO_ReadPin(PORT_BUTTON[i], PIN_BUTTON[i]) == BUTTON_IS_PRESSED){
-			Counter_button_press[i]++;
+			if(Counter_button_press[i] < MAX_COUNTER){
+				Counter_button_press[i]++;
+			}
 		}
 		else {
-			Counter_button_press[i] = 0;
 			Flag_for_button_press[i] = (Counter_button_press[i] > 0) && (Counter_button_press[i] < 10);
+			Counter_button_press[i] = 0;
 		}
 	}
 }

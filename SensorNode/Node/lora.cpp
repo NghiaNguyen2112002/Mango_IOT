@@ -42,18 +42,12 @@ void LORA_SendMsg(char* msg){
   lora_serial.write((char)DES_ADDRESS_H);
   lora_serial.write((char)DES_ADDRESS_L);
   lora_serial.write((char)DES_CHANNEL);
-
-  Serial.println(msg);
-
   lora_serial.print(msg);
-  // while(*msg){
-  //   lora_serial.write(*msg++);
-  // }
+  Serial.println(msg);
 }
 
 String LORA_Listen(void){
   if(lora_serial.available() > 0){
-    Serial.println("a");
      Serial.println(lora_serial.readString());
   }
   return "";

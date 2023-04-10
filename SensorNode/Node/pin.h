@@ -9,8 +9,8 @@
 
 #define LORA_M0_PIN   8
 #define LORA_M1_PIN   7
-#define LORA_RX_PIN   5
-#define LORA_TX_PIN   6
+#define LORA_RX_PIN   6
+#define LORA_TX_PIN   5
 
 
 #endif

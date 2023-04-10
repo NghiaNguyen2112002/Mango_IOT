@@ -8,20 +8,21 @@
 
 #include "fsm.h"
 
-uint8_t mode_lcd, mode_data;
+uint8_t mode_lcd, mode_data, mode_sys;
 uint8_t node_turn;
 
-uint8_t flag_config_wf, flag_connect_wf, flag_display;
+uint8_t flag_config_mode, flag_connect_mode, flag_display_data_mode;
 
 uint8_t msg[100];
-
+//uint8_t msg_esp[100];
 
 void ProcessMsg(char* msg){
 	uint8_t i = 0, node_id;
 	char* token;
 
+
 /*
-  	 {"ID":1,"TEMP":30.4,"HUMID":50.5,"ADC":30,"N":40,"P":30,"K":40}
+	!{"ID":1,"T":0.00,"H":0.00,"A":20,"N":0,"P":0,"K":0}#
 	    0     "ID"
 		1     1
 		2     "TEMP"
@@ -55,10 +56,14 @@ void ProcessMsg(char* msg){
 	}
 }
 
+uint8_t SystemMode(void){
+	return mode_sys;
+}
 //==================HIGH LEVEL FUNCTION==================//
 void FSM_Init(void){
 	mode_data = INIT;
 	mode_lcd = INIT;
+	mode_sys = INIT;
 
 	node_turn = 0;
 	_time_screen = 50;
@@ -75,29 +80,24 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
-
 			mode_lcd = DISPLAY_CONNECT_WF;
 //			mode_lcd = READY_DISPLAY;
 		}
 		break;
 	case READY_DISPLAY:
+
 		CLCD_PrintCharBuffer(1, 12 + (_counter_time_elapsed/10) % 4, '.');
 		if((_counter_time_elapsed/10) % 4 == 3) CLCD_PrintStringBuffer(1, 0, SCREEN_READY_DISPLAY_1);
 
-		if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
+		if(SystemMode() == SYS_CONNECT_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
-
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
-		else if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+		else if(SystemMode() == SYS_CONFIG_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
-
-			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -120,16 +120,14 @@ void FSM_LcdDisplay(void){
 		CLCD_PrintFloatBuffer(0, INDEX_LCD_TEMP, _Data_node[node_turn].temp);
 		CLCD_PrintFloatBuffer(1, INDEX_LCD_HUMI, _Data_node[node_turn].humid);
 
-		if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
+		if(SystemMode() == SYS_CONNECT_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
-		else if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+		else if(SystemMode() == SYS_CONFIG_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
-
-			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -148,16 +146,14 @@ void FSM_LcdDisplay(void){
 		CLCD_PrintNumBuffer(0, INDEX_LCD_SHUMI, _Data_node[node_turn].adc);
 		CLCD_PrintNumBuffer(1, INDEX_LCD_N, _Data_node[node_turn].nito);
 
-		if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
+		if(SystemMode() == SYS_CONNECT_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
-		else if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+		else if(SystemMode() == SYS_CONFIG_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
-
-			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -176,7 +172,18 @@ void FSM_LcdDisplay(void){
 		CLCD_PrintNumBuffer(0, INDEX_LCD_P, _Data_node[node_turn].photpho);
 		CLCD_PrintNumBuffer(1, INDEX_LCD_K, _Data_node[node_turn].kali);
 
-		if(_time_screen < 5){
+		if(SystemMode() == SYS_CONNECT_WF){
+			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
+			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
+			mode_lcd = DISPLAY_CONNECT_WF;
+		}
+		else if(SystemMode() == SYS_CONFIG_WF){
+			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
+			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
+
+			mode_lcd = DISPLAY_CONFIG_WF;
+		}
+		else if(_time_screen < 5){
 			_time_screen = TIME_SCREEN;
 			CLCD_PrintStringBuffer(0, 0, SCREEN_RELAY_CUR_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_RELAY_CUR_1);
@@ -187,6 +194,18 @@ void FSM_LcdDisplay(void){
 	case DISPLAY_RELAY_CUR:
 		CLCD_PrintStringBuffer(0, INDEX_LCD_RELAY, RELAYSTATESTR(_Data_gateway.relay));
 		CLCD_PrintFloatBuffer(1, INDEX_LCD_CUR, _Data_gateway.cur);
+
+		if(SystemMode() == SYS_CONNECT_WF){
+			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
+			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
+			mode_lcd = DISPLAY_CONNECT_WF;
+		}
+		else if(SystemMode() == SYS_CONFIG_WF){
+			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
+			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
+
+			mode_lcd = DISPLAY_CONFIG_WF;
+		}
 		if(_time_screen < 5){
 			_time_screen = TIME_SCREEN;
 			mode_lcd = TURN_NEXT_NODE;
@@ -200,11 +219,9 @@ void FSM_LcdDisplay(void){
 		break;
 	case DISPLAY_CONFIG_WF:
 
-		if((strcmp(UESP_GetMsg(), CONFIG_WF_SUCCESS) == 0) || IN_IsPressed(BT_CONFIG)) {
+		if(SystemMode() == SYS_CONNECT_WF) {
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
-
-			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
@@ -212,21 +229,18 @@ void FSM_LcdDisplay(void){
 	case DISPLAY_CONNECT_WF:
 		//every 500ms print a '.'
 		CLCD_PrintCharBuffer(1, 6 + (_counter_time_elapsed/10) % 5, '.');
+
 		if((_counter_time_elapsed/10) % 5 == 4) CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-		if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+		if(SystemMode() == SYS_CONFIG_WF){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
 
-			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
-
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
-		else if(strcmp(UESP_GetMsg(), CONNECT_WF_SUCCESS) == 0) {
+		else if(SystemMode() == SYS_PROCESS_DATA) {
 			CLCD_PrintStringBuffer(0, 0, SCREEN_READY_DISPLAY_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_READY_DISPLAY_1);
-
-			UESP_SendMsg(CMD_TRANSMIT_DATA, sizeof(CMD_TRANSMIT_DATA));
 
 			mode_lcd = READY_DISPLAY;
 		}
@@ -237,34 +251,85 @@ void FSM_LcdDisplay(void){
 
 }
 
-void FSM_DataTransfer(void){
-	switch(mode_data){
+void FSM_SystemControl(void){
+	switch(mode_sys){
 	case INIT:
+		UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
-		_time_read_data = TIME_READ_DATA;
-		mode_data = TRANSMIT_DATA;
+		mode_sys = SYS_CONNECT_WF;
 		break;
-	case READ_DATA:
+	case SYS_CONNECT_WF:
 
-		mode_data = TRANSMIT_DATA;
+		if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
+
+			mode_sys = SYS_CONFIG_WF;
+		}
+		else if(UESP_IsReceivedMsg()){
+			if(strcmp(UESP_GetMsg(), CONNECT_WF_SUCCESS) == 0){
+
+			UESP_SendMsg(CMD_TRANSMIT_DATA, sizeof(CMD_TRANSMIT_DATA));
+
+			mode_sys = SYS_PROCESS_DATA;
+			}
+		}
 		break;
-	case TRANSMIT_DATA:
+	case SYS_CONFIG_WF:
+		if(UESP_IsReceivedMsg()){
+			if((strcmp(UESP_GetMsg(), CONFIG_WF_SUCCESS == 0))) {
+				UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
+
+				mode_sys = SYS_CONNECT_WF;
+			}
+		}
+		else if(IN_IsPressed(BT_CONFIG)) {
+			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
+
+			mode_sys = SYS_CONNECT_WF;
+		}
+		break;
+	case SYS_PROCESS_DATA:
+
+		if(_time_read_data < 5) {
+			_time_read_data = TIME_READ_DATA;
+//			_Data_gateway.cur = IN_ReadADC();
+		}
+
 		if(ULORA_IsReceivedMsg()) {
-//				process data received from lora
-//				=> stm32 send to esp => esp send to server
+//			process data received from lora
+//			=> stm32 send to esp => esp send to server
+
 
 			UESP_SendMsg(msg, sprintf(msg, ULORA_GetMsg()));
 
 			ProcessMsg(msg);
 		}
 
-		if(_time_read_data < 5) {
-			_time_read_data = TIME_READ_DATA;
-			mode_data = READ_DATA;
+
+		if(UESP_IsReceivedMsg()){
+			if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
+				UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
+
+				mode_sys = SYS_CONNECT_WF;
+			}
+			else if(strcmp(UESP_GetMsg(), ONRELAY) == 0){
+				HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, SET);
+				_Data_gateway.relay = 1;
+			}
+			else if(strcmp(UESP_GetMsg(), OFFRELAY) == 0){
+				HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, RESET);
+				_Data_gateway.relay = 0;
+
+			}
+		}
+
+		if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
+
+			mode_sys = SYS_CONFIG_WF;
 		}
 		break;
 	default:
-		mode_data = INIT;
+		mode_sys = INIT;
 	}
-
 }

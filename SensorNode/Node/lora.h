@@ -12,13 +12,20 @@
 
 // adress and channel lora of gateway
 #define DES_ADDRESS_H           0x00
-#define DES_ADDRESS_L           0x00
-#define DES_CHANNEL             0x02
+#define DES_ADDRESS_L           0x01
+#define DES_CHANNEL             0x04
 
+
+
+// // NODE 0: 
+// #define SELF_ADDRESS_H          0x00
+// #define SELF_ADDRESS_L          0x02
+// #define SELF_CHANNEL            0x04
+
+// NODE 1: 
 #define SELF_ADDRESS_H          0x00
-#define SELF_ADDRESS_L          0x01
-#define SELF_CHANNEL            0x02
-
+#define SELF_ADDRESS_L          0x03
+#define SELF_CHANNEL            0x04
 
 
 void LORA_Init(void);

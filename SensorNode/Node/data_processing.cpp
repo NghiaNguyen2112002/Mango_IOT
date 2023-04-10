@@ -3,14 +3,16 @@
 unsigned char mode;
 
 String ConvertDataToJsonString(void){
-  // String s = "{\"ID:\"";
-  //       s += 1;
+  String s = "!{\"ID\":" + String(_data.node_id);
+        s += ",\"T\":" + String(_data.temp);
+        s += ",\"H\":" + String(_data.humid);
+        s += ",\"A\":" + String(_data.adc);
+        s += ",\"N\":" + String(_data.nito);
+        s += ",\"P\":" + String(_data.photpho);
+        s += ",\"K\":" + String(_data.kali);   
+        s += "}#";
 
-  
-
-
-
-  // return payload; 
+  return s; 
 }
 
 
@@ -29,9 +31,9 @@ void DT_FsmForDataProcessing(void){
 
     break;
     case READ_DATA:
-      // _data.temp = IN_ReadTemp();
-      // _data.humid = IN_ReadHumid();
-      // _data.adc = IN_ReadADC();
+      _data.temp = IN_ReadTemp();
+      _data.humid = IN_ReadHumid();
+      _data.adc = IN_ReadADC();
       // _data.nito = IN_ReadNito();
       // _data.photpho = IN_ReadPhotpho();
       // _data.kali = IN_ReadKali();

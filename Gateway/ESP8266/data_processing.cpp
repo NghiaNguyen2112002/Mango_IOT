@@ -2,7 +2,7 @@
 
 SoftwareSerial mySerial(STM32_TX_PIN, STM32_RX_PIN);
 
-bool flag_config_wf;
+bool flag_config_wf, flag_send_data;
 String msg;
 unsigned char mode;
 
@@ -15,6 +15,7 @@ void DT_Init(void){
   flag_config_wf = false;
   mode = INIT;
 }
+
 
 void DT_FsmForProcess(void){
   switch(mode){
@@ -38,6 +39,7 @@ void DT_FsmForProcess(void){
           mode = CONFIG_WF;
         }
         else if(strcmp(msg.c_str(), CMD_TRANSMIT_DATA) == 0){
+          flag_send_data = true;
           Serial.println("ESP TRANSMIT");
           mode = TRANSMIT_DATA;
         }
@@ -65,17 +67,29 @@ void DT_FsmForProcess(void){
     case TRANSMIT_DATA:
       SV_Connect();
 
-      if(mySerial.available()){
+      if(mySerial.available() && SV_IsConnected()){
         msg = mySerial.readString();
         Serial.println(msg);
 
         if(strcmp(msg.c_str(), CMD_CONFIG_WF) == 0){
-          flag_config_wf = true;
+          WF_Disconnect();
+          WF_CreateWebserver();
+          mode = CONFIG_WF;
+        }
+        else if(strcmp(msg.c_str(), CMD_CONNECT_WF) == 0){
+          WF_Connect(_wifi_name, _wifi_pass);
+          Serial.println("ESP CONNECT WF");
+          mode = CONNECT_WF;
         }
         else {
           Serial.println("Sent to SV");
           SV_SendData(CHANNEL_DATA, (char*)msg.c_str());
         }
+      }
+
+      if(_flag_received_cmd_from_sv){
+        _flag_received_cmd_from_sv = false;
+        mySerial.print(_cmd);
       }
 
       if(WF_IsConnected() == false){
@@ -84,9 +98,7 @@ void DT_FsmForProcess(void){
       }
       else if(flag_config_wf){
         flag_config_wf = false;
-        WF_Disconnect();
-        WF_CreateWebserver();
-        mode = CONFIG_WF;
+
       }
 
     break;

@@ -1,8 +1,8 @@
 ../Core/Src/trans_data_uart.c:21:6:HAL_UART_RxCpltCallback	16	static
 ../Core/Src/trans_data_uart.c:59:6:UART_Init	16	static
 ../Core/Src/trans_data_uart.c:69:6:UESP_SendMsg	16	static
-../Core/Src/trans_data_uart.c:75:9:UESP_IsReceivedMsg	4	static
-../Core/Src/trans_data_uart.c:79:10:UESP_GetMsg	4	static
-../Core/Src/trans_data_uart.c:86:6:ULORA_SendMsg	16	static
-../Core/Src/trans_data_uart.c:90:9:ULORA_IsReceivedMsg	4	static
-../Core/Src/trans_data_uart.c:94:10:ULORA_GetMsg	4	static
+../Core/Src/trans_data_uart.c:75:9:UESP_IsReceivedMsg	16	static
+../Core/Src/trans_data_uart.c:82:10:UESP_GetMsg	4	static
+../Core/Src/trans_data_uart.c:87:6:ULORA_SendMsg	16	static
+../Core/Src/trans_data_uart.c:91:9:ULORA_IsReceivedMsg	16	static
+../Core/Src/trans_data_uart.c:98:10:ULORA_GetMsg	4	static

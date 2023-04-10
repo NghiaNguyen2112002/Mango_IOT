@@ -31,7 +31,14 @@
 //==================MODE FSM DATA PROCESSING==================//
 //#define INIT						0
 #define READ_DATA					1
-#define TRANSMIT_DATA				2
+#define IDLING						2
+#define SEND_DATA					3
+
+//==================MODE FSM SYSTEM CONTROL==================//
+//#define INIT						0
+#define SYS_CONNECT_WF				1
+#define SYS_CONFIG_WF				2
+#define SYS_PROCESS_DATA			3
 
 
 //==================TIME==================//
@@ -40,10 +47,11 @@
 
 //==================MSG FROM ESP==================//
 #define ONRELAY							"ONRELAY"
-#define OFFRELAY						"OFRELAY"
+#define OFFRELAY						"OFFRELAY"
 #define CONFIG_WF_SUCCESS				"CONFIG_SUCCESS"
 #define CONNECT_WF_SUCCESS				"CONNECT_SUCCESS"
 #define DISCONNECT_WF					"DISCONNECT"
+
 
 //==================CMD TO ESP==================//
 #define CMD_CONNECT_WF					"CONNECT"
@@ -52,6 +60,7 @@
 
 void FSM_Init(void);
 void FSM_LcdDisplay(void);
+void FSM_SystemControl(void);
 void FSM_DataTransfer(void);
 
 #endif /* INC_FSM_H_ */

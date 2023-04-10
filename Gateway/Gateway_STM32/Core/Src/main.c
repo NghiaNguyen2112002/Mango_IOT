@@ -105,7 +105,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-//  IN_Init();
+//  IN_Init(&hadc1);
   CLCD_Init(&hi2c1, 0x3F, 2, 16);
 
   UART_Init(&huart1, &huart2);
@@ -114,6 +114,7 @@ int main(void)
   TM_Init(&htim2);
   TM_SetTime(50);
 
+  HAL_Delay(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,7 +129,8 @@ int main(void)
 		  if(_time_screen >= 5) _time_screen -= 5;
 		  if(_time_read_data >= 5) _time_read_data -= 5;
 
-		  FSM_DataTransfer();
+		  FSM_SystemControl();
+//		  FSM_DataTransfer();
 		  FSM_LcdDisplay();
 
 		  if(_counter_time_elapsed % 10 == 0) HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
@@ -342,6 +344,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, M1_Pin|M0_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -349,11 +357,25 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : M1_Pin M0_Pin */
+  GPIO_InitStruct.Pin = M1_Pin|M0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pin : BT0_Pin */
   GPIO_InitStruct.Pin = BT0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BT0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RELAY_Pin */
+  GPIO_InitStruct.Pin = RELAY_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(RELAY_GPIO_Port, &GPIO_InitStruct);
 
 }
 

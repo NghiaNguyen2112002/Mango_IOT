@@ -17,5 +17,6 @@ extern ESP8266WebServer WebServer;
 
 extern String _wifi_name, _wifi_pass;
 
-extern bool _flag_config_success;
+extern String _cmd;
+extern bool _flag_config_success, _flag_received_cmd_from_sv;
 #endif

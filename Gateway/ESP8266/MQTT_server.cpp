@@ -38,6 +38,12 @@ void on_message(const char* topic, byte* payload, unsigned int length) {
   char json[length + 1];
   strncpy (json, (char*)payload, length);
   json[length] = '\0';
+  
+  _flag_received_cmd_from_sv = true;
+  
+  _cmd = String(json);
+  _cmd[0] = '!';
+  _cmd[length-1] = '#';
 
-  Serial.println(json);
+  Serial.println(_cmd);
 }

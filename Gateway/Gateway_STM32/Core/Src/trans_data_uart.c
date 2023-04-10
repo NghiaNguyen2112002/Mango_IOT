@@ -73,13 +73,14 @@ void UESP_SendMsg(char* msg, uint8_t size){
 }
 
 uint8_t UESP_IsReceivedMsg(void){
-	return flag_esp_received_str;
+	uint8_t temp = flag_esp_received_str;
+
+	flag_esp_received_str = 0;
+	return temp;
 }
 
 uint8_t* UESP_GetMsg(void){
-	if(!flag_esp_received_str) return "";
 
-	flag_esp_received_str = 0;
 	return msg_esp;
 }
 
@@ -88,13 +89,16 @@ void ULORA_SendMsg(char* msg, uint8_t size){
 }
 
 uint8_t ULORA_IsReceivedMsg(void){
-	return flag_lora_received_str;
+	uint8_t temp = flag_lora_received_str;
+
+	flag_lora_received_str = 0;
+	return temp;
 }
 
 uint8_t* ULORA_GetMsg(void){
-	if(!flag_lora_received_str) return "";
+//	if(!flag_lora_received_str) return "";
 
-	flag_lora_received_str = 0;
+//	flag_lora_received_str = 0;
 
 	return msg_lora;
 }

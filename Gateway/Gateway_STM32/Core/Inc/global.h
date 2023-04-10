@@ -37,4 +37,7 @@ extern uint16_t _time_screen, _time_read_data;
 
 extern uint16_t _counter_time_elapsed;
 
+
+extern uint8_t _flag_send_data;
+
 #endif /* INC_GLOBAL_H_ */

@@ -30,8 +30,9 @@ void loop() {
 
     if(_time_read >=5) _time_read -= 5;
 
-    // DT_FsmForDataProcessing();
-    if(Serial.available()) LORA_SendMsg(Serial.readString().c_str());
+    DT_FsmForDataProcessing();
+
+    // if(Serial.available()) LORA_SendMsg(Serial.readString().c_str());
 
     // Serial.print(LORA_Listen());
 
