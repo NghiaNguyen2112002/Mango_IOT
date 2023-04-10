@@ -28,7 +28,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/input.h ../Core/Inc/main.h ../Core/Inc/lcd_i2c.h \
  ../Core/Inc/global.h ../Core/Inc/fsm.h ../Core/Inc/lcd_i2c.h \
  ../Core/Inc/trans_data_uart.h ../Core/Inc/input.h ../Core/Inc/global.h \
- ../Core/Inc/timer.h ../Core/Inc/trans_data_uart.h
+ ../Core/Inc/screen_lcd.h ../Core/Inc/timer.h \
+ ../Core/Inc/trans_data_uart.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -65,5 +66,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/trans_data_uart.h:
 ../Core/Inc/input.h:
 ../Core/Inc/global.h:
+../Core/Inc/screen_lcd.h:
 ../Core/Inc/timer.h:
 ../Core/Inc/trans_data_uart.h:

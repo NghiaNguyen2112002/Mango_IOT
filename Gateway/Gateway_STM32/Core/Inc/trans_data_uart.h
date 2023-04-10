@@ -16,11 +16,11 @@
 
 void UART_Init(UART_HandleTypeDef* uart_esp, UART_HandleTypeDef* uart_lora);
 
-void UESP_SendMsg(char* msg);
+void UESP_SendMsg(char* msg, uint8_t size);
 uint8_t UESP_IsReceivedMsg(void);
 uint8_t* UESP_GetMsg(void);
 
-void ULORA_SendMsg(char* msg);
+void ULORA_SendMsg(char* msg, uint8_t size);
 uint8_t ULORA_IsReceivedMsg(void);
 uint8_t* ULORA_GetMsg(void);
 

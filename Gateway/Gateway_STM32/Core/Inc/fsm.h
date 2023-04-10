@@ -14,6 +14,7 @@
 #include "trans_data_uart.h"
 #include "input.h"
 #include "global.h"
+#include "screen_lcd.h"
 
 //==================MODE FSM LCD DISPLAY==================//
 #define INIT						0
@@ -32,41 +33,6 @@
 #define READ_DATA					1
 #define TRANSMIT_DATA				2
 
-
-//==================LCD SCREEN==================//
-#define SCREEN_INIT_0                   "      MANGO     "
-#define SCREEN_INIT_1                   "                "
-
-#define SCREEN_TEMP_HUMI_0             	" .ATEMP:      *C"        //"1.ATEMP: 30.3 *C"
-#define SCREEN_TEMP_HUMI_1             	" .AHUMI:      % "        //"1.AHUMI: 50.0 % "
-
-#define SCREEN_SOILHUMID_NITO_0			" .SHUMI:      % "
-#define SCREEN_SOILHUMID_NITO_1			" .N:       mg/kg"
-
-#define SCREEN_PHOTPHO_KALI_0			" .P:       mg/kg"
-#define SCREEN_PHOTPHO_KALI_1			" .K:       mg/kg"
-
-#define SCREEN_RELAY_CUR_0              "RELAY:          "        //" RELAY:     ON  "
-#define SCREEN_RELAY_CUR_1              "CUR:          A "
-
-#define SCREEN_CONFIG_WIFI_0            "  CONFIG  WIFI  "
-#define SCREEN_CONFIG_WIFI_1            "                "
-
-#define SCREEN_WIFI_CONNECTING_0        "CONNECTING  WIFI"
-#define SCREEN_WIFI_CONNECTING_1        "                "
-
-#define RELAYSTATESTR(state)         	state ? "ON " : "OFF"
-
-//==================INDEX DISPLAY ON SCREEN==================//
-#define INDEX_LCD_CEL_SYMBOL				14
-#define INDEX_LCD_TEMP						9
-#define INDEX_LCD_HUMI						9
-#define INDEX_LCD_SHUMI						9
-#define INDEX_LCD_N							5
-#define INDEX_LCD_P							5
-#define INDEX_LCD_K							5
-#define INDEX_LCD_RELAY						7
-#define INDEX_LCD_CUR						5
 
 //==================TIME==================//
 #define TIME_SCREEN						300

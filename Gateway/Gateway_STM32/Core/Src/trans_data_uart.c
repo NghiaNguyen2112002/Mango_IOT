@@ -66,8 +66,10 @@ void UART_Init(UART_HandleTypeDef* uart_esp, UART_HandleTypeDef* uart_lora){
 	HAL_UART_Receive_IT(u_lora, &byte_lora_received, 1);
 }
 
-void UESP_SendMsg(char* msg){
-	HAL_UART_Transmit(u_esp, msg, sizeof(msg), 1000);
+void UESP_SendMsg(char* msg, uint8_t size){
+//	HAL_UART_Transmit(u_esp, msg, sizeof(msg), 1000);
+	HAL_UART_Transmit(u_esp, msg, size, 1000);
+
 }
 
 uint8_t UESP_IsReceivedMsg(void){
@@ -81,8 +83,8 @@ uint8_t* UESP_GetMsg(void){
 	return msg_esp;
 }
 
-void ULORA_SendMsg(char* msg){
-	HAL_UART_Transmit(u_lora, msg, sizeof(msg), 1000);
+void ULORA_SendMsg(char* msg, uint8_t size){
+	HAL_UART_Transmit(u_lora, msg, size, 1000);
 }
 
 uint8_t ULORA_IsReceivedMsg(void){

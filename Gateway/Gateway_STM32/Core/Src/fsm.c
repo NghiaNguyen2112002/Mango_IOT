@@ -13,7 +13,7 @@ uint8_t node_turn;
 
 uint8_t flag_config_wf, flag_connect_wf, flag_display;
 
-uint8_t* msg;
+uint8_t msg[100];
 
 
 void ProcessMsg(char* msg){
@@ -75,20 +75,21 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-			UESP_SendMsg(CMD_CONNECT_WF);
+			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
-//			mode_lcd = DISPLAY_CONNECT_WF;
-			mode_lcd = READY_DISPLAY;
+			mode_lcd = DISPLAY_CONNECT_WF;
+//			mode_lcd = READY_DISPLAY;
 		}
 		break;
 	case READY_DISPLAY:
+		CLCD_PrintCharBuffer(1, 12 + (_counter_time_elapsed/10) % 4, '.');
+		if((_counter_time_elapsed/10) % 4 == 3) CLCD_PrintStringBuffer(1, 0, SCREEN_READY_DISPLAY_1);
 
-//		if(_Data_node[node_turn].is_connected > 0){
 		if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-			UESP_SendMsg(CMD_CONNECT_WF);
+			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
@@ -96,7 +97,7 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
 
-//			UESP_SendMsg(CONFIG_WF);
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -128,7 +129,7 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
 
-			UESP_SendMsg(CMD_CONFIG_WF);
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -156,7 +157,7 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
 
-			UESP_SendMsg(CMD_CONFIG_WF);
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
@@ -203,7 +204,7 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
 
-			UESP_SendMsg(CMD_CONNECT_WF);
+			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
 			mode_lcd = DISPLAY_CONNECT_WF;
 		}
@@ -217,12 +218,16 @@ void FSM_LcdDisplay(void){
 			CLCD_PrintStringBuffer(0, 0, SCREEN_CONFIG_WIFI_0);
 			CLCD_PrintStringBuffer(1, 0, SCREEN_CONFIG_WIFI_1);
 
-			UESP_SendMsg(CMD_CONFIG_WF);
+			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_lcd = DISPLAY_CONFIG_WF;
 		}
 		else if(strcmp(UESP_GetMsg(), CONNECT_WF_SUCCESS) == 0) {
-			UESP_SendMsg(CMD_TRANSMIT_DATA);
+			CLCD_PrintStringBuffer(0, 0, SCREEN_READY_DISPLAY_0);
+			CLCD_PrintStringBuffer(1, 0, SCREEN_READY_DISPLAY_1);
+
+			UESP_SendMsg(CMD_TRANSMIT_DATA, sizeof(CMD_TRANSMIT_DATA));
+
 			mode_lcd = READY_DISPLAY;
 		}
 		break;
@@ -244,15 +249,13 @@ void FSM_DataTransfer(void){
 		mode_data = TRANSMIT_DATA;
 		break;
 	case TRANSMIT_DATA:
-//		if(ULORA_IsReceivedMsg()) {
-		if(UESP_IsReceivedMsg()){
-			//	process data received from lora
-			//	=> stm32 send to esp => esp send to server
-//			msg = ULORA_GetMsg();
-			msg = UESP_GetMsg();
-			ProcessMsg(msg);
+		if(ULORA_IsReceivedMsg()) {
+//				process data received from lora
+//				=> stm32 send to esp => esp send to server
 
-			UESP_SendMsg(msg);
+			UESP_SendMsg(msg, sprintf(msg, ULORA_GetMsg()));
+
+			ProcessMsg(msg);
 		}
 
 		if(_time_read_data < 5) {
