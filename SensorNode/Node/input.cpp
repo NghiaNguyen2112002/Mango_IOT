@@ -42,7 +42,7 @@ float IN_ReadTemp(void){
 }
 
 unsigned char IN_ReadADC(void){
-  return analogRead(ADC_PIN) * 100 / 1023;      //convert to percentage
+  return map(analogRead(ADC_PIN), 0, 1023, 0, 100);      //convert to percentage
 }
 
 unsigned char IN_ReadNito(void){

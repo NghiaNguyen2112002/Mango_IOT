@@ -13,8 +13,17 @@ uint8_t node_turn;
 
 uint8_t flag_config_mode, flag_connect_mode, flag_display_data_mode;
 
-uint8_t msg[100];
-//uint8_t msg_esp[100];
+char msg[100];
+char msg_json[30];
+
+
+char* ConvertMessageToJsonString(void){
+	strcpy(msg_json, "{\"ID\":100,\"RELAY\":");
+	msg_json[18] = _Data_gateway.relay + '0';
+	strcpy(msg_json + 19,"}\n");
+
+	return msg_json;
+}
 
 void ProcessMsg(char* msg){
 	uint8_t i = 0, node_id;
@@ -292,21 +301,23 @@ void FSM_SystemControl(void){
 
 		if(_time_read_data < 5) {
 			_time_read_data = TIME_READ_DATA;
-//			_Data_gateway.cur = IN_ReadADC();
+			_Data_gateway.cur = IN_ReadADC() * 3.3 / 4096 * 10;
+
+			UESP_SendMsg(ConvertMessageToJsonString(), 25);
 		}
 
-		if(ULORA_IsReceivedMsg()) {
+		else if(ULORA_IsReceivedMsg()) {
 //			process data received from lora
 //			=> stm32 send to esp => esp send to server
 
 
-			UESP_SendMsg(msg, sprintf(msg, ULORA_GetMsg()));
+			UESP_SendMsg(msg, sprintf(msg, "%s", ULORA_GetMsg()));
 
 			ProcessMsg(msg);
 		}
 
 
-		if(UESP_IsReceivedMsg()){
+		else if(UESP_IsReceivedMsg()){
 			if(strcmp(UESP_GetMsg(), DISCONNECT_WF) == 0){
 				UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 
@@ -323,7 +334,7 @@ void FSM_SystemControl(void){
 			}
 		}
 
-		if(IN_IsPressed_ms(BT_CONFIG, 2000)){
+		else if(IN_IsPressed_ms(BT_CONFIG, 2000)){
 			UESP_SendMsg(CMD_CONFIG_WF, sizeof(CMD_CONFIG_WF));
 
 			mode_sys = SYS_CONFIG_WF;

@@ -63,6 +63,11 @@ void DT_FsmForProcess(void){
         mySerial.print(CONFIG_WF_SUCCESS);
         mode = IDLING;
       }
+      else if(strcmp(msg.c_str(), CMD_CONNECT_WF) == 0){
+        WF_Connect(_wifi_name, _wifi_pass);
+        Serial.println("ESP CONNECT WF");
+        mode = CONNECT_WF;
+      }
     break;
     case TRANSMIT_DATA:
       SV_Connect();

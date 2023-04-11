@@ -22,8 +22,8 @@
 #define BT_CONFIG							0
 
 
-//void IN_Init(ADC_HandleTypeDef* adc_pin);
-uint8_t IN_ReadADC(void);
+void IN_Init(ADC_HandleTypeDef* adc_pin);
+uint32_t IN_ReadADC(void);
 void IN_ReadButton(void);
 uint8_t IN_IsPressed(uint8_t index);
 uint8_t IN_IsPressed_ms(uint8_t index, uint16_t duration);

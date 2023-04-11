@@ -65,13 +65,15 @@ void WF_CreateWebserver(void){
   WebServer.on("/setap", [](){
     _wifi_name = WebServer.arg("wf_name");
     _wifi_pass = WebServer.arg("pass");
-    _flag_config_success = true;
 
     Serial.println(_wifi_name);
     Serial.println(_wifi_pass);
     
     String s = "<h1>Wifi configuration's successful !!</h1>";
     WebServer.send(200, "text/html", MakePage("", s));
+    
+    _flag_config_success = true;
+
   });
 
   Serial.println("Begin web server");

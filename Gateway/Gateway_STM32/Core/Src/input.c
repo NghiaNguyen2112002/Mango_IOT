@@ -14,14 +14,16 @@ uint16_t PIN_BUTTON[] = {BT0_Pin};
 uint8_t Flag_for_button_press[NO_OF_BUTTONS];
 uint16_t Counter_button_press[NO_OF_BUTTONS];
 
-//ADC_HandleTypeDef* adc;
+ADC_HandleTypeDef* adc;
 
-//void IN_Init(ADC_HandleTypeDef* hadc){
-//	adc = hadc;
-//}
+void IN_Init(ADC_HandleTypeDef* hadc){
+	adc = hadc;
+	HAL_ADC_Start(adc);
+}
 
-uint8_t IN_ReadADC(void){
-//	return HAL_ADC_GetValue(adc) / 4095 * 100;
+uint32_t IN_ReadADC(void){
+
+	return HAL_ADC_GetValue(adc);
 }
 
 //this function is called every 50ms
