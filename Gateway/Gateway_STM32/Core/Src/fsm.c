@@ -326,11 +326,12 @@ void FSM_SystemControl(void){
 			else if(strcmp(UESP_GetMsg(), ONRELAY) == 0){
 				HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, SET);
 				_Data_gateway.relay = 1;
+				UESP_SendMsg(ConvertMessageToJsonString(), 25);
 			}
 			else if(strcmp(UESP_GetMsg(), OFFRELAY) == 0){
 				HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, RESET);
 				_Data_gateway.relay = 0;
-
+				UESP_SendMsg(ConvertMessageToJsonString(), 25);
 			}
 		}
 

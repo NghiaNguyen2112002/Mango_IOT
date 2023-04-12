@@ -17,7 +17,7 @@
 
 
 
-// // NODE 0: 
+// NODE 0: 
 // #define SELF_ADDRESS_H          0x00
 // #define SELF_ADDRESS_L          0x02
 // #define SELF_CHANNEL            0x04

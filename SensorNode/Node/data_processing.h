@@ -13,7 +13,7 @@
 #define SEND_DATA         3
 
 //===============TIME===============//
-#define TIME_IDLING       500         //read data every 5000 ms
+#define TIME_IDLING       1000         //read data every 10000 ms
 
 
 void DT_Init(void);

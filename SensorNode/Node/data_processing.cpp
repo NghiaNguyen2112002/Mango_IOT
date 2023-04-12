@@ -27,8 +27,10 @@ void DT_FsmForDataProcessing(void){
 
     break;
     case IDLING:
-      if(_time_read < 5) mode = READ_DATA;
-
+      if(_time_read < 5) {
+        _time_read = TIME_IDLING;
+        mode = READ_DATA;
+      }
     break;
     case READ_DATA:
       _data.temp = IN_ReadTemp();
@@ -43,7 +45,6 @@ void DT_FsmForDataProcessing(void){
       LORA_SendMsg(ConvertDataToJsonString().c_str());
 
       //sending data, back to idling and wait a while before the next reading time
-      _time_read = TIME_IDLING;
       mode = IDLING;
     break;
     default:

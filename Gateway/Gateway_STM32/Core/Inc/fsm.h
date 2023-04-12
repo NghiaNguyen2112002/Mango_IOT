@@ -42,8 +42,8 @@
 
 
 //==================TIME==================//
-#define TIME_SCREEN						300
-#define TIME_READ_DATA					500
+#define TIME_SCREEN						500
+#define TIME_READ_DATA					1000
 
 //==================MSG FROM ESP==================//
 #define ONRELAY							"ONRELAY"

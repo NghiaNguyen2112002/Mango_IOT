@@ -65,7 +65,7 @@ void Error_Handler(void);
 #define M0_GPIO_Port GPIOA
 #define BT0_Pin GPIO_PIN_1
 #define BT0_GPIO_Port GPIOB
-#define RELAY_Pin GPIO_PIN_2
+#define RELAY_Pin GPIO_PIN_3
 #define RELAY_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
