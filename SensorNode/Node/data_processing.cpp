@@ -36,9 +36,12 @@ void DT_FsmForDataProcessing(void){
       _data.temp = IN_ReadTemp();
       _data.humid = IN_ReadHumid();
       _data.adc = IN_ReadADC();
-      // _data.nito = IN_ReadNito();
-      // _data.photpho = IN_ReadPhotpho();
-      // _data.kali = IN_ReadKali();
+      _data.nito = IN_ReadNito();
+      delay(300);             //wait 300ms for next reading NPK
+      _data.photpho = IN_ReadPhotpho();
+      delay(300);             //wait 300ms for next reading NPK
+      _data.kali = IN_ReadKali();
+      delay(300);
       mode = SEND_DATA;
     break;
     case SEND_DATA:

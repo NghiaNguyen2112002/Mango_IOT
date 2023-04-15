@@ -17,6 +17,7 @@ unsigned long time_now = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(SERIAL_DEBUG_BAUD);
+  EEPROM.begin(512);
   WF_Init();
   SV_Init();
   DT_Init();

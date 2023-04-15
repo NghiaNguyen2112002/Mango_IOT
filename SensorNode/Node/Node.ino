@@ -21,6 +21,7 @@ void setup() {
 
   time_now = millis();
   Serial.println("begin");
+  delay(500);
 }
 
 void loop() {

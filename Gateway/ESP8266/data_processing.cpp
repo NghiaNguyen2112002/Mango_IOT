@@ -28,6 +28,18 @@ void DT_FsmForProcess(void){
         Serial.println(msg);
 
         if(strcmp(msg.c_str(), CMD_CONNECT_WF) == 0){
+//      READ WIFI NAME + WIFI PASS FROM  EEPROM
+          if (EEPROM.read(0) != 0) {      
+            _wifi_name = "";
+            _wifi_pass = "";   
+            for (int i = 0; i < 32; i++) {                //32 o nho dau tieu la chua ten mang wifi SSID
+              _wifi_name += char(EEPROM.read(i));
+            }
+            for (int i = 32; i < 96; ++i) {               //o nho tu 32 den 96 la chua PASSWORD
+              _wifi_pass += char(EEPROM.read(i));
+            }
+          }
+          Serial.println(_wifi_name + "  " + _wifi_pass);
           WF_Connect(_wifi_name, _wifi_pass);
           Serial.println("ESP CONNECT WF");
           mode = CONNECT_WF;
@@ -43,6 +55,7 @@ void DT_FsmForProcess(void){
           Serial.println("ESP TRANSMIT");
           mode = TRANSMIT_DATA;
         }
+        else Serial.println("ERROR CMD");
       }
     break;
     case CONNECT_WF:
@@ -60,6 +73,19 @@ void DT_FsmForProcess(void){
     case CONFIG_WF:
       if(_flag_config_success){
         _flag_config_success = false;
+
+//      SAVE WIFI NAME + WIFI PASS TO EEPROM
+        for (int i = 0; i < 96; i++) {
+          EEPROM.write(i, 0);               //Clear EEPROM
+        }
+        for (int i = 0; i < _wifi_name.length(); i++) {
+          EEPROM.write(i, _wifi_name[i]);
+        }
+        for (int i = 0; i < _wifi_pass.length(); i++) {
+          EEPROM.write(32 + i, _wifi_pass[i]);
+        }
+        EEPROM.commit();
+
         mySerial.print(CONFIG_WF_SUCCESS);
         mode = IDLING;
       }

@@ -2,7 +2,7 @@
 #include "Arduino.h"
 #include "lora.h"
 
-SoftwareSerial lora_serial(LORA_TX_PIN, LORA_RX_PIN);
+SoftwareSerial lora_serial(LORA_RX_PIN, LORA_TX_PIN);
 
 void Config(uint16_t address, uint8_t channel){
   digitalWrite(LORA_M0_PIN, 1);
