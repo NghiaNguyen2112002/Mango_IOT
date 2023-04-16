@@ -15,17 +15,19 @@
 #define DES_ADDRESS_L           0x01
 #define DES_CHANNEL             0x04
 
-
-
+#if defined(NODE_0)
 // NODE 0: 
-// #define SELF_ADDRESS_H          0x00
-// #define SELF_ADDRESS_L          0x02
-// #define SELF_CHANNEL            0x04
+#define SELF_ADDRESS_H          0x00
+#define SELF_ADDRESS_L          0x02
+#define SELF_CHANNEL            0x04
+#endif
 
+#if defined(NODE_1)
 // NODE 1: 
 #define SELF_ADDRESS_H          0x00
 #define SELF_ADDRESS_L          0x03
 #define SELF_CHANNEL            0x04
+#endif
 
 
 void LORA_Init(void);
