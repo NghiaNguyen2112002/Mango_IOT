@@ -3,7 +3,7 @@
 unsigned char mode;
 
 String ConvertDataToJsonString(void){
-  String s = "!{\"ID\":" + String(_data.node_id);
+  String s = "!{\"I\":" + String(_data.node_id);
         s += ",\"T\":" + String(_data.temp);
         s += ",\"H\":" + String(_data.humid);
         s += ",\"A\":" + String(_data.adc);
@@ -45,7 +45,7 @@ void DT_FsmForDataProcessing(void){
       mode = SEND_DATA;
     break;
     case SEND_DATA:
-      LORA_SendMsg(ConvertDataToJsonString().c_str());
+      LORA_SendMsg((char*)ConvertDataToJsonString().c_str());
 
       //sending data, back to idling and wait a while before the next reading time
       mode = IDLING;

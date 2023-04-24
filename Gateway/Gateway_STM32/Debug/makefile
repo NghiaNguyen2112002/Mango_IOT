@@ -60,8 +60,8 @@ all: main-build
 main-build: Mango_Garden.elf secondary-outputs
 
 # Tool invocations
-Mango_Garden.elf Mango_Garden.map: $(OBJS) $(USER_OBJS) E:\IOT_Mango\Gateway\Gateway_STM32\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Mango_Garden.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\IOT_Mango\Gateway\Gateway_STM32\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Mango_Garden.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Mango_Garden.elf Mango_Garden.map: $(OBJS) $(USER_OBJS) E:\Hired\ Project\IOT_Mango\Gateway\Gateway_STM32\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Mango_Garden.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Hired Project\IOT_Mango\Gateway\Gateway_STM32\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Mango_Garden.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

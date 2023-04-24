@@ -134,7 +134,6 @@ int main(void)
 		  if(_time_read_data >= 5) _time_read_data -= 5;
 
 		  FSM_SystemControl();
-//		  FSM_DataTransfer();
 		  FSM_LcdDisplay();
 
 		  if(_counter_time_elapsed % 10 == 0) HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);

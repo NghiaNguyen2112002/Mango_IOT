@@ -86,11 +86,7 @@ void FSM_LcdDisplay(void){
 		CLCD_PrintStringBuffer(1, 0, SCREEN_INIT_1);
 
 		if(_time_screen < 5){
-			CLCD_PrintStringBuffer(0, 0, SCREEN_WIFI_CONNECTING_0);
-			CLCD_PrintStringBuffer(1, 0, SCREEN_WIFI_CONNECTING_1);
-
-			mode_lcd = DISPLAY_CONNECT_WF;
-//			mode_lcd = READY_DISPLAY;
+			mode_lcd = READY_DISPLAY;
 		}
 		break;
 	case READY_DISPLAY:
@@ -263,9 +259,11 @@ void FSM_LcdDisplay(void){
 void FSM_SystemControl(void){
 	switch(mode_sys){
 	case INIT:
-		UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
-
-		mode_sys = SYS_CONNECT_WF;
+//		send CMD to ESP after 2000ms
+		if(_counter_time_elapsed % 40 == 39){
+			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
+			mode_sys = SYS_CONNECT_WF;
+		}
 		break;
 	case SYS_CONNECT_WF:
 
@@ -284,6 +282,7 @@ void FSM_SystemControl(void){
 		}
 		break;
 	case SYS_CONFIG_WF:
+
 		if(UESP_IsReceivedMsg()){
 			if((strcmp(UESP_GetMsg(), CONFIG_WF_SUCCESS == 0))) {
 				UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
@@ -301,7 +300,8 @@ void FSM_SystemControl(void){
 
 		if(_time_read_data < 5) {
 			_time_read_data = TIME_READ_DATA;
-			_Data_gateway.cur = IN_ReadADC() * 3.3 / 4096 * 10;
+//			ACS712 5A => 185 mV/A
+			_Data_gateway.cur = (IN_ReadADC() * 3.3 / 4095.0 - 2500.0) / 185.0;
 
 			UESP_SendMsg(ConvertMessageToJsonString(), 25);
 		}

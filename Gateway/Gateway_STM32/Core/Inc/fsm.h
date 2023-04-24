@@ -61,6 +61,5 @@
 void FSM_Init(void);
 void FSM_LcdDisplay(void);
 void FSM_SystemControl(void);
-void FSM_DataTransfer(void);
 
 #endif /* INC_FSM_H_ */

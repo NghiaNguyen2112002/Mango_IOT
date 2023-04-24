@@ -12,7 +12,7 @@ When we want to change nodeID we just need to change the define below
     #define NODE_1
 */
 
-#define NODE_0         
+#define NODE_1         
 // #define NODE_1
 
 

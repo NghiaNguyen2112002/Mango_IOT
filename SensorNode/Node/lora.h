@@ -3,7 +3,7 @@
 
 #include <SoftwareSerial.h>
 #include "pin.h"
-
+#include "global.h"
 //======MODE======//
 #define MODE_NORMAL           0
 #define MODE_WAKEUP           1
@@ -27,6 +27,7 @@
 #define SELF_ADDRESS_H          0x00
 #define SELF_ADDRESS_L          0x03
 #define SELF_CHANNEL            0x04
+
 #endif
 
 

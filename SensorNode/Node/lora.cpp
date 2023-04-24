@@ -2,7 +2,7 @@
 #include "Arduino.h"
 #include "lora.h"
 
-SoftwareSerial lora_serial(LORA_RX_PIN, LORA_TX_PIN);
+SoftwareSerial lora_serial(LORA_TX_PIN, LORA_RX_PIN);
 
 void Config(uint16_t address, uint8_t channel){
   digitalWrite(LORA_M0_PIN, 1);
@@ -39,11 +39,12 @@ void LORA_SetMode(unsigned char mode){
 }
 
 void LORA_SendMsg(char* msg){
+  Serial.println(msg);
+
   lora_serial.write((char)DES_ADDRESS_H);
   lora_serial.write((char)DES_ADDRESS_L);
   lora_serial.write((char)DES_CHANNEL);
   lora_serial.print(msg);
-  Serial.println(msg);
 }
 
 String LORA_Listen(void){
