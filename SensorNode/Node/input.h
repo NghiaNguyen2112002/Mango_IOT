@@ -6,7 +6,7 @@
 
 #include "pin.h"
 
-#define DHTTYPE       DHT22
+#define DHTTYPE       DHT11
 
 void IN_Init(void);
 float IN_ReadHumid(void);

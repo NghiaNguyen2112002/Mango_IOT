@@ -259,8 +259,8 @@ void FSM_LcdDisplay(void){
 void FSM_SystemControl(void){
 	switch(mode_sys){
 	case INIT:
-//		send CMD to ESP after 2000ms
-		if(_counter_time_elapsed % 40 == 39){
+//		send CMD to ESP after 1500ms
+		if(_counter_time_elapsed % 40 > 30){
 			UESP_SendMsg(CMD_CONNECT_WF, sizeof(CMD_CONNECT_WF));
 			mode_sys = SYS_CONNECT_WF;
 		}

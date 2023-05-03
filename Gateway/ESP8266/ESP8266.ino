@@ -21,7 +21,6 @@ void setup() {
   WF_Init();
   SV_Init();
   DT_Init();
-
 }
 
 void loop() {
@@ -29,6 +28,7 @@ void loop() {
   if(millis() >= time_now + EXCECUTING_CYCLE){
     time_now = millis();
     DT_FsmForProcess();
+
   }
   
   client.loop();

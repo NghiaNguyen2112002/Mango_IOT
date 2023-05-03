@@ -63,11 +63,16 @@ void DT_FsmForProcess(void){
         mySerial.print(CONNECT_WF_SUCCESS);
         mode = IDLING;
       }
-      else if(strcmp(msg.c_str(), CMD_CONFIG_WF) == 0){
-        WF_Disconnect();
-        WF_CreateWebserver();
-        Serial.println("ESP CONFIG WF");
-        mode = CONFIG_WF;
+      else if(mySerial.available()){
+        msg = mySerial.readString();
+        Serial.println(msg);
+
+        if(strcmp(msg.c_str(), CMD_CONFIG_WF) == 0){
+          WF_Disconnect();
+          WF_CreateWebserver();
+          Serial.println("ESP CONFIG WF");
+          mode = CONFIG_WF;
+        }
       }
     break;
     case CONFIG_WF:
@@ -89,10 +94,15 @@ void DT_FsmForProcess(void){
         mySerial.print(CONFIG_WF_SUCCESS);
         mode = IDLING;
       }
-      else if(strcmp(msg.c_str(), CMD_CONNECT_WF) == 0){
-        WF_Connect(_wifi_name, _wifi_pass);
-        Serial.println("ESP CONNECT WF");
-        mode = CONNECT_WF;
+      else if(mySerial.available()){
+        msg = mySerial.readString();
+        Serial.println(msg);
+  
+        if(strcmp(msg.c_str(), CMD_CONNECT_WF) == 0){
+          WF_Connect(_wifi_name, _wifi_pass);
+          Serial.println("ESP CONNECT WF");
+          mode = CONNECT_WF;
+        }
       }
     break;
     case TRANSMIT_DATA:

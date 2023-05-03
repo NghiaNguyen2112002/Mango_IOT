@@ -118,7 +118,7 @@ int main(void)
   TM_Init(&htim2);
   TM_SetTime(50);
 
-  HAL_Delay(1000);
+//  HAL_Delay(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,15 +132,14 @@ int main(void)
 
 		  if(_time_screen >= 5) _time_screen -= 5;
 		  if(_time_read_data >= 5) _time_read_data -= 5;
-
+//
 		  FSM_SystemControl();
 		  FSM_LcdDisplay();
-
+//
 		  if(_counter_time_elapsed % 10 == 0) HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 
 		  CLCD_DisplayScreen();
 	  }
-
 
     /* USER CODE END WHILE */
 
@@ -305,11 +304,11 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 7999;
+  htim2.Init.Prescaler = 8000 - 1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 49;
+  htim2.Init.Period = 50 - 1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
